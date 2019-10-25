@@ -7,7 +7,7 @@ from DataStructures import Stack, Queue
 
 class UnaCalculadoraMuySimple(Queue):
     # Esta es una implementación MUY simple de una calculadora... Y a pesar de ello, como sea quedó un código
-    # medio complejo, pero espero que no sea dificil de comprender. No estoy validando la precedencia de operadores,
+    # medio largo, pero espero que no sea dificil de comprender. No estoy validando la precedencia de operadores,
     # tampoco si hay parentesis. Los dígitos y operadores se evaluaran en el orden que estén en la cadena y el
     # resultado de la operación anterior se acumulará para ser utilizado en la siguiente operación.
 
@@ -151,4 +151,15 @@ if __name__ == '__main__':
 
     # Esta cadena devolverá 15. Notar los espacios, los cuales serán ignorados.
     cal.set_calculation('3* 5 ')
+    cal.sort_calculation()
+
+    # Ahora más de una operación y números con decimales.
+    cal.set_calculation('31.2 - 15 + 100.10 * 0.0')
+    cal.sort_calculation()
+
+    # Cadenas incorrectas.
+    cal.set_calculation('3 + -')
+    cal.sort_calculation()
+
+    cal.set_calculation('3 6 +')
     cal.sort_calculation()
