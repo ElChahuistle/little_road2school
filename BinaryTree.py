@@ -132,16 +132,16 @@ class Node:
     def get_value(self) -> int:
         return self.number
 
-    def set_left(self, node: Node):
+    def set_left_node(self, node: Node):
         self.left = node
 
-    def set_right(self, node: Node):
+    def set_right_node(self, node: Node):
         self.right = node
 
-    def get_left(self) -> Node:
+    def get_left_node(self) -> Node:
         return self.left
 
-    def get_right(self) -> Node:
+    def get_right_node(self) -> Node:
         return self.right
 
     def empty_right_node(self) -> bool:
@@ -152,23 +152,28 @@ class Node:
 
 
 class BinaryTreeNode:
+    # En función esta clase funciona igual que "BinaryTreeTuple", con la diferencia que usamos el objeto Node en vez
+    # de tuple para almacenar el número y las ramas que salen de cada nodo. De ahí que no hondaré en explicaciones
+    # porque los métodos hacen exactamente lo mismo que en "BinaryTreeTuple".
     def __init__(self):
         self.root = None
         self.stack = Stack()
 
+    # Este método busca un número en el binary tree. Durante la búsqueda guardará los nodos que visita en caso de
+    # este número se vaya a agregar al árbol.
     def is_num_tree(self, number: int) -> bool:
         # El valor default de la respuesta; dado que una posibilidad es que árbol esté vacío, entonces inmediatamente
         # brincará al return del método.
         node_found = False
 
-        # Primero validar que haya valores en el árbol.
+        # Primero validar que haya nodos en el árbol.
         if self.root is not None:
-            # Si no hay valores en el árbol obtenemos la raíz del árbol; recordar que esta raíz podría tener más nodos
+            # Si no hay nodos en el árbol obtenemos la raíz del árbol; recordar que esta raíz podría tener más nodos
             # abajo de ella.
             root = self.root
 
             # Con esta declaración reseteamos el stack de búsqueda.
-            self.stack = None
+            self.stack = Stack()
 
             while not (root is None or node_found):
                 if not number == root.get_value():
@@ -183,18 +188,33 @@ class BinaryTreeNode:
 
         return node_found
 
+    # Tal como lo hicimos en la clase "BinaryTreeTuple" este método agregará el número al binary tree.
     def add_number(self, number: int):
+        # Buscamos el número en el árbol para saber si existe. Tal como en "BinaryTreeTuple" el stack que se genere
+        # durante la búsqueda nos servirá para armar el nuevo árbol con el número que entra como parámetro.
         if not self.is_num_tree(number):
 
+            # De entrada este nodo será el que tenga el valor que queremos agregar al árbol, pero reutilizaremos
+            # este objeto para construir el árbol que incluya el nodo nuevo.
             new_tree = Node(number)
+
+            # Ahora vamos a traer los nodos que se guardaron durante la búsqueda para hacerlos parte del nuevo
+            # árbol que incluye el nodo nuevo.
             while not self.stack.stack_empty():
                 stack_node = self.stack.pop()
 
+                # Vemos en qué rama debe ir el árbol con la respuesta.
                 if new_tree.get_value() > stack_node.get_value():
-                    stack_node.set_right(new_tree)
+                    stack_node.set_right_node(new_tree)
                 else:
-                    stack_node.set_left(new_tree)
+                    stack_node.set_left_node(new_tree)
 
+                # Asignamos el árbol recién armado al nodo que trae el resultado de agregar el nuevo nodo.
                 new_tree = stack_node
 
+            # Una vez que todos los nodos han sido considerados, el árbol final que quedó en "new_tree" es el árbol
+            # anterior, pero incluyendo el nodo nuevo, así que "new_tree" se convierte en root.
             self.root = new_tree
+
+    def show_tree(self):
+        pass
