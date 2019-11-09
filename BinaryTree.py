@@ -1,5 +1,5 @@
-from __future__ import annotations
 from DataStructures import Stack
+from Node import Node, NodePP
 
 
 class BinaryTreeTuple:
@@ -121,39 +121,6 @@ class BinaryTreeTuple:
 
             # Mostrar el árbol final.
             print('Árbol: %s' % str(self.root))
-
-
-class Node:
-    def __init__(self, number: int = None):
-        self.number = number
-        self.left = None
-        self.right = None
-
-    def set_value(self, number: int):
-        self.__init__(number)
-
-    def get_value(self) -> int:
-        return self.number
-
-    def set_left_node(self, node: Node) -> Node:
-        self.left = node
-        return self
-
-    def set_right_node(self, node: Node) -> Node:
-        self.right = node
-        return self
-
-    def get_left_node(self) -> Node:
-        return self.left
-
-    def get_right_node(self) -> Node:
-        return self.right
-
-    def empty_right_node(self) -> bool:
-        return self.right is None if True else False
-
-    def empty_left_node(self) -> bool:
-        return self.left is None if True else False
 
 
 class BinaryTreeNode:
@@ -402,23 +369,39 @@ class BinaryTreeRecursiveRedux:
         self.add_number_bis(self.get_root(), number)
 
 
-class BinaryTreeBalanced:
+class BinaryTreeBalanced(BinaryTreeRecursiveRedux):
     def __init__(self):
-        self.tree = BinaryTreeRecursive()
-        self.height = 0
+        super().__init__()
 
-    def get_height_bis(self, root: Node):
-        if root is None:
-            return 0
+    def get_root(self) -> NodePP:
+        return self.root
+
+    @staticmethod
+    def balance_left_tree(root: NodePP, left_branch: NodePP) -> NodePP:
+        return left_branch.set_right_node(root.set_left_node())
+
+    @staticmethod
+    def balance_right_tree(root: NodePP, right_branch: NodePP) -> NodePP:
+        return right_branch.set_left_node(root.set_right_node())
+
+    def balance_tree(self, root: NodePP) -> NodePP:
+        if root.get_left_height() > root.get_right_height():
+            return self.balance_left_tree(root, root.get_left_node())
         else:
-            left_height = self.get_height_bis(root.get_left_node())
-            right_height = self.get_height_bis(root.get_right_node())
+            return self.balance_right_tree(root, root.get_right_node())
 
-            return left_height < right_height if right_height else left_height
+    def add_number_bis(self, root: NodePP, number: int) -> NodePP:
+        if not root:
+            return NodePP(number)
+        elif number == root.get_value():
+            return root
+        elif number < root.get_value():
+            root.set_left_node(self.add_number_bis(root.get_left_node(), number))
+        else:
+            root.set_right_node(self.add_number_bis(root.get_right_node(), number))
 
-    def get_height(self):
-        self.height = self.get_height_bis(self.tree.get_root())
+        if not root.is_balanced():
+            return self.balance_tree(root)
 
-    def add_number(self, number: int):
-        self.tree.add_number(number)
-        self.get_height()
+    def add_number(self, number: int) -> NodePP:
+        return self.add_number_bis(self.get_root(), number)
