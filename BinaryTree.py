@@ -124,19 +124,24 @@ class BinaryTreeTuple:
 
 
 class Node:
-    def __init__(self, number: int):
+    def __init__(self, number: int = None):
         self.number = number
         self.left = None
         self.right = None
 
+    def set_value(self, number: int):
+        self.__init__(number)
+
     def get_value(self) -> int:
         return self.number
 
-    def set_left_node(self, node: Node):
+    def set_left_node(self, node: Node) -> Node:
         self.left = node
+        return self
 
-    def set_right_node(self, node: Node):
+    def set_right_node(self, node: Node) -> Node:
         self.right = node
+        return self
 
     def get_left_node(self) -> Node:
         return self.left
@@ -216,5 +221,204 @@ class BinaryTreeNode:
             # anterior, pero incluyendo el nodo nuevo, así que "new_tree" se convierte en root.
             self.root = new_tree
 
-    def show_tree(self):
-        pass
+
+class BinaryTreeRecursive:
+    # Esta implementación de árbol binario usa recursividad para buscar y agregar números de ser necesario. En
+    # comparación con las dos implementaciones anteriores es que se usa menos código, sólo que el código es un poco
+    # difícil de entender.
+
+    # El constructor es similar a los de las otras implementaciones, sólo que ya no necesitamos el stack, de hecho,
+    # el uso de un stack sirvió para simular recursividad, de ahí que ya no lo estemos usando.
+    def __init__(self):
+        self.root = None
+
+    def get_root(self):
+        return self.root
+
+    # Este método es recursivo, se llama asimismo para hacer la búsqueda. Pasamos un nodo como parámetro como el "punto
+    # de partida". La idea es que lidiamos con un nodo a la vez. El caso más elemental es que sólo haya un nodo, uno
+    # que no tenga hijos. Así que cuando cuando se tenga un sólo nodo, comparamos el valor del nodo con el que se
+    # recibió como parámetro.
+    #
+    # Si hay más nodos en el árbol "bajaremos" para seguir buscando el número, si es que existe.
+    def search_number_bis(self, root: Node, number: int):
+        # Validamos si hay un nodo a revisar.
+        if root is not None:
+            # Si se recibe un nodo, entonces averiguamos si su valor es el número que buscamos.
+            if number == root.get_value():
+                # Si el número del nodo es igual al número que recibimos como parámetro entonces devolvemos True.
+                return True
+            elif number < root.get_value():
+                # En caso de que el valor del nodo no sea el número que buscamos, entonces seguir buscando el número
+                # por las ramas. Buscaremos por la izquierda si el número que se recibió como parámetro es menor al
+                # número del que estamos visitando, de lo contrario nos iremos por la rama derecha.
+
+                # Este "return" devolverá la solución, que al final será True o False, dependiendo si encuentra un nodo
+                # con el número que buscamos por la rama izquierda del árbol que recorremos.
+                return self.search_number_bis(root.get_left_node(), number)
+            else:
+                # Este "return" es lo mismo que el anterior, sólo que la búsqueda va por la rama derecha del árbol.
+                return self.search_number_bis(root.get_right_node(), number)
+        else:
+            # Si ya no hay nodo a revisar, entonces se devuelve False.
+            return False
+
+    # Este método contiene al método "search_tree_bi". La idea de este método es simplificar el llamado de la búsqueda
+    # con el número y el nodo raíz ("self.root") como el punto de un inicio de la búsqueda.
+    def search_number(self, number: int):
+        # Se muestra un mensaje diferente dependiendo si se encuentra el número o no.
+        if self.search_number_bis(self.get_root(), number):
+            print('El número %i existe en el árbol.' % number)
+        else:
+            print('El número %i ** NO ** existe en el árbol.' % number)
+
+    # Este método, si no hay más nodos que recorrer, entonces se crea un nuevo nodo con el número que se pasó como
+    # parámetro. Cuando se recibe un None en vez de un nodo (Node) quiere decir que no hay más nodos que visitar, de
+    # ahí que se devuelve un nodo nuevo con el valor del número que se pasó como parámetro.
+    def add_number_bis(self, root: Node, number: int):
+        # Esta condición valora si no se recibió algún nodo, de ser así, entonces se devuelve un nodo nuevo con el valor
+        # que se pasó como parámetro, el cual se agregará a la rama que se recorrió para encontrar el lugar que le toca
+        # en el árbol.
+        if root is None:
+            return Node(number)
+        elif root.get_value() < number:
+            # Si no es None quiere decir que hay más nodos que visitar en el árbol. Así que se compara el número del
+            # nodo que visitamos con el que se recibió como parámetro. Si es el número del parámetro es menor al valor
+            # del nodo, si es así entonces se prosigue el recorrido por la rama izquierda...
+            return self.add_number_bis(root.get_left_node(), number)
+        else:
+            # ... Si el valor es mayor entonces se recorre la rama derecha.
+            return self.add_number_bis(root.get_right_node(), number)
+
+    # Este método es para agregar un número al árbol, si es que este no existe. Tal como "search_tree", este método
+    # es sólo para pasar como punto de partida "self.root".
+    def add_number(self, number: int):
+        # Si no encuentra el número, se agrega un nodo con el número que se pasó como parámetro, de lo contrario, el
+        # número ya existe y no hay necesidad de agregarlo al árbol.
+        if not self.search_number_bis(self.get_root(), number):
+            # Si no se encuentra el número en el árbol, entonces se procede a agregarlo al árbol.
+            self.root = self.add_number_bis(self.get_root(), number)
+
+            # Mostrar mensaje confirmando que el número se agregó al árbol.
+            print('El número %i se agregó al árbol.' % number)
+        else:
+            # Si ya existe en el árbol, se muestra mensaje de que ya existe.
+            print('El número %i ya existe en el árbol.' % number)
+
+
+class BinaryTreeRecursiveRedux:
+    def __init__(self):
+        self.root = None
+
+    def get_root(self) -> Node:
+        return self.root
+
+    # Este método es una copia del método de la clase BinaryTreeRecursive. Lo agrego para que la
+    # clase esté completa con búsqueda y agregar número. Le hice unos cambios para aprovechar las
+    # facilidades de Python.
+    def search_number_bis(self, root: Node, number: int) -> bool:
+        # No es necesario preguntar si es None, Python valora el parámetro y si es None entonces
+        # devuelve False, de lo contario True. Nego el resultado para comenzar con el caso más
+        # elemental, es decir, que el nodo sea y por lo tanto el número no existe en el árbol.
+        if not root:
+            return False
+
+        # En caso de que el nodo (root) no sea None, procedemos a valorar si el número del nodo
+        # actual es el número que buscamos. Si es así, entonces devolvemos True, porque encontramos
+        # el número en el árbol.
+        elif number == root.get_value():
+            return True
+
+        # Las siguientes llamadas son recursivas, es decir, el método se llama asimismo con otros parámetros
+        # asumiendo que en alguna llamada posterior se encontrará la respuesta.
+
+        # En caso de que el valor del nodo que visitamos no es igual al número del parámetro continuamos
+        # la búsqueda. En caso de que el número del parámetro sea menor al valor del nodo que visitamos
+        # entonces continuaremos la búsqueda por la rama izquierda del nodo actual.
+        elif number < root.get_value():
+            return self.search_number_bis(root.get_left_node(), number)
+
+        # Finalmente, si el valor no es menor, entonces es mayor y por lo tanto la búsqueda continua por
+        # la derecha del nodo que estamos visitando.
+        else:
+            return self.search_number_bis(root.get_right_node(), number)
+
+    # Este método nos sirve para llamar el método anterior con la raíz del árbol como parámetro.
+    def search_number(self, number):
+        if not self.search_number_bis(self.get_root(), number):
+            print('El número ** NO ** existe en el árbol!')
+        else:
+            print('El número existe en el árbol.')
+
+    # Este método es recursivo y es una re-implementación del método que "add_number_bis" de la
+    # clase BinaryTreeRecursive. Ahora, en vez de ejecutar la búsqueda binaria antes de intentar
+    # agregar el número, el método hace ambas cosas: busca el número y lo agrega de no encontrarlo.
+    def add_number_bis(self, root: Node, number: int) -> Node:
+
+        # Esta condición checa si root es un nodo. Si es None entonces es False, es decir, no es
+        # un nodo si no una rama vacía; de lo contrario quiere decir que root sí es un nodo, de ahí
+        # que que devolverá True. Nego el resultado de la condición para que comience con el caso
+        # más simple, es decir, que el árbol está vacío y por lo tanto se le agrega un nuevo nodo
+        # con el número que recibimos como parámetro.
+        if not root:
+
+            # Mensaje de feedback para saber que el número se agregó al árbol.
+            print('El número se agregó al árbol.')
+            return Node(number)
+
+        # Obtenemos el valor del nodo root y lo comparamos con el número que nos dieron
+        # como parámetro. Si es verdadero significa que el número ya existe en el árbol,
+        # entonces devuelve root nuevamente, dado que no hay nada más que hacer.
+        elif number == root.get_value():
+
+            # Un mensaje de feedback para saber que el número no se agregó al árbol.
+            print('El número ya existe en el árbol!')
+            return root
+
+        # En caso de que el valor del nodo que se visita no sea igual procedemos a visitiar
+        # el resto del árbol. Si el parámetro es menor al valor del nodo que estamos revisando
+        # entonces seguimos el recorrido por la izquierda.
+        elif number < root.get_value():
+
+            # Las siguientes llamadas son recursivas, lo que quiere decir que el método se llama
+            # asimismo con diferentes valores. El usar return para cada llamada es por el método
+            # devuelve un nodo, entonces, para construir la respuesta (que en este caso es desde
+            # lo más bajo del árbol a lo más alto) necesitamos "colocar" los nodos en el lugar
+            # que les corresponde.
+
+            # Entonces, como es recursivo, el método se llama asimismo, pero se pasa como
+            # parámentro su rama izquierda y el número que estamos buscando agregar. El resultado
+            # de la llamada recursiva se asignará a la rama izquierda del nodo que se visita.
+            return root.set_left_node(self.add_number_bis(root.get_left_node(), number))
+        else:
+
+            # En caso de que el número sea mayor al valor del nodo que estamos visitando, entonces
+            # el método se llama asimismo con la rama derecha y el mismo número como parámetro.
+            # El resultado de la llamada recursiva se asignará a la rama derecha del nodo actual.
+            return root.set_right_node(self.add_number_bis(root.get_right_node(), number))
+
+    # Este método es para poder llamar al método recursivo con el nodo raíz de la clase.
+    def add_number(self, number: int):
+        self.add_number_bis(self.get_root(), number)
+
+
+class BinaryTreeBalanced:
+    def __init__(self):
+        self.tree = BinaryTreeRecursive()
+        self.height = 0
+
+    def get_height_bis(self, root: Node):
+        if root is None:
+            return 0
+        else:
+            left_height = self.get_height_bis(root.get_left_node())
+            right_height = self.get_height_bis(root.get_right_node())
+
+            return left_height < right_height if right_height else left_height
+
+    def get_height(self):
+        self.height = self.get_height_bis(self.tree.get_root())
+
+    def add_number(self, number: int):
+        self.tree.add_number(number)
+        self.get_height()
