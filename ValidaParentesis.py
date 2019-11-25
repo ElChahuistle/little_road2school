@@ -1,12 +1,12 @@
-import Stack as stck # Importamos la clase que declaramos antes.
+from Stack import Stack as stck # Importamos la clase que declaramos antes.
 
 
 class ValidaParentesis:
     # Esta nueva clase recibirá una cadena con paréntesis y revisará que cada parentesis se cierre con otro.
     # Vamos a usar 2 objetos de la clase Stack para comparar los parentesis, uno para recibir la cadena y otro
     # para hacer las comparaciones según se lea la cadena de texto.
-    initial_stack = stck.Stack()
-    valid_stack = stck.Stack()
+    initial_stack = stck()
+    valid_stack = stck()
 
     # Con este método se toma carácter de la cadena de paréntesis y los mete a "initial_stack"
     def push_parentesis(self, parentesis):
@@ -66,7 +66,7 @@ class ValidaParentesis:
 
     # Este método sólo servirá para recibir la cadena a validar y decir si es válida o no.
     def validate(self, parentesis):
-        if valida_parentesis.run_validation(parentesis):
+        if self.run_validation(parentesis):
             print('La cadena es valida.')
         else:
             print('La cadena NO es valida')

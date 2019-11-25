@@ -1,36 +1,95 @@
-from BinaryTree import Node
+def music():
+    rock = int(input('Give it to me baby '))
 
 
-top_root = Node(100)
-left_node = Node(50)
-right_node = Node(200)
-left_left_node = Node(25)
-left_left_left_node = Node(12)
-
-left_left_node.set_left_node(left_left_left_node)
-left_node.set_left_node(left_left_node)
-
-right_left_node = Node(150)
-right_right_node = Node(250)
-right_node.set_left_node(right_left_node)
-right_node.set_right_node(right_right_node)
-
-top_root.set_left_node(left_node)
-top_root.set_right_node(right_node)
-
-max_depth = 0
 
 
-def print_tree(root: Node, depth: int):
-    if root:
-        print_tree(root.get_left_node(), depth + 1)
-        print('Value (Depth) -> %i (%i)' % (root.get_value(), depth))
-        print_tree(root.get_right_node(), depth + 1)
+# ##numero in range(1,5)
+# True
+# for numero in range(1,5):
+#     print(numero)
+#
+# 1
+# 2
+# 3
+# 4
+# x = 5
+# y = 1
+# while y <= x:
+#     print(y)
+#     y = y + 1
+#
+# 1
+# 2
+# 3
+# 4
+# 5##
 
-    if max_depth < depth:
-        max_depth = depth
 
+def licor():
+    from math import sqrt
+    ron = int(input('Give a number: '))
+    if 1 <= ron <= 10:
+        if ron%2 == 0:
+            print('Pair: '+str(ron ** 2))
+        else:
+            print('Unpair '+str(sqrt(ron)))
+    else:
+        print('Yoy know nothing Jon Snow')
+
+
+def cigarretsmentol():
+    camels = int(input('Give a number: '))
+    marlboro = False
+    if (1 <= camels <= 10):
+        if (camels%2 != 0):
+            marlboro = True
+    if marlboro:
+        print('Yes its sir ' + str(camels))
+    else:
+        print('No is not sir %i' %camels)
+
+def cigarrets():
+    camels = int(input('Give a number: '))
+    if (1 <= camels <= 10) and (camels%2 != 0):
+        print('Yes its sir '+str(camels))
+    else:
+        print('No is not sir %i' %camels)
+
+def color():
+    blue = int(input('Number: '))
+    if 5 <= blue <= 10:
+        print('Yes '+str(blue))
+    else:
+        print('No '+str(blue))
+
+def beer():
+    pilsner = int(input('Number '))
+    if pilsner%2 == 0:
+        print('Par')
+    else:
+        print('Impar')
+
+def canabis():
+    indica = float(input('First number: '))
+    satiba = float(input('Second number: '))
+
+    print(indica + satiba)
+    print((indica + satiba)*10)
+
+def felinos():
+    gato = 5
+    gata = 7
+
+    gatos = gato + gata
+
+    print(gatos)
+
+    gatos = gatos * 10
+
+    print(gatos)
 
 if __name__ == '__main__':
-    top_depth = 0
-    print_tree(top_root, top_depth)
+    licor()
+
+
